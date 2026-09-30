@@ -1,0 +1,24 @@
+name: StreamCheck
+
+on:
+  push:
+    paths:
+      - "tools/streamcheck/**"
+      - ".github/workflows/streamcheck.yml"
+  pull_request:
+    paths:
+      - "tools/streamcheck/**"
+      - ".github/workflows/streamcheck.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/streamcheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm test
