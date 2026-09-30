@@ -2,8 +2,6 @@
 
 > A tiny, dependency-free CLI for finding broken, redirected, slow, or unexpected media URLs.
 
-[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/) [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-111111)](#design-principles) [![License](https://img.shields.io/badge/license-MIT-blue)](tools/streamcheck/LICENSE)
-
 StreamCheck is a small developer tool for checking remote media and file URLs directly from the terminal.
 
 It solves a simple problem: URL lists become unreliable over time. A link can expire, redirect somewhere unexpected, return HTML instead of media, become unreachable, or simply become painfully slow.
