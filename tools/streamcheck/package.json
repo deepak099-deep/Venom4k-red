@@ -1,0 +1,16 @@
+{
+  "name": "@deepak099-deep/streamcheck",
+  "version": "1.0.0",
+  "description": "A zero-dependency CLI for checking media URLs, HTTP status, content type, latency, redirects, and TLS.",
+  "type": "module",
+  "bin": {
+    "streamcheck": "./src/cli.js"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
