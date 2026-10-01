@@ -1,0 +1,1 @@
+{"name":"@venom4k/manifestlint","version":"1.0.0","private":true,"type":"module","bin":{"manifestlint":"src/cli.js"},"scripts":{"test":"node --test"},"engines":{"node":">=20"}}
