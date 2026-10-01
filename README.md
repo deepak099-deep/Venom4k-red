@@ -215,6 +215,22 @@ StreamCheck accepts URLs supplied by the user and makes network requests to them
 
 For security issues, avoid publishing sensitive exploit details in a public issue. Contact the maintainer privately through GitHub.
 
+## Tool collection
+
+This repository now contains two small utilities for media and movie-catalog workflows:
+
+| Tool | Purpose |
+| --- | --- |
+| **StreamCheck** | Check remote media URLs for HTTP status, content type, redirects, latency, and failures |
+| **ManifestLint** | Validate movie JSON manifests before publishing them to a catalog or streaming application |
+
+ManifestLint lives in `tools/manifestlint/` and is dependency-free, Node.js 20+ compatible, and covered by automated tests.
+
+Run its tests with:
+
+    cd tools/manifestlint
+    npm test
+
 ## License
 
 MIT License. See [tools/streamcheck/LICENSE](tools/streamcheck/LICENSE).
