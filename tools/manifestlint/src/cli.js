@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+
+import fs from "node:fs";
+import { validateManifest } from "./validate.js";
+
+function usage() {
+  console.log(`ManifestLint - validate a Venom4K-style movie JSON manifest
+
+Usage:
+  manifestlint <manifest.json>
+  cat manifest.json | manifestlint
+  manifestlint --json <manifest.json>
+
+Exit codes:
+  0  valid manifest
+  1  validation failed
+  2  input or CLI error
+`);
+}
+
+function readInput(path) {
+  if (path) return fs.readFileSync(path, "utf8");
+  if (process.stdin.isTTY) throw new Error("No manifest provided. Pass a JSON file or pipe JSON through stdin.");
+  return fs.readFileSync(0, "utf8");
+}
+
+const args = process.argv.slice(2);
+if (args.includes("--help") || args.includes("-h")) {
+  usage();
+  process.exit(0);
+}
+
+const jsonMode = args.includes("--json");
+const paths = args.filter((arg) => arg !== "--json");
+
+if (paths.length > 1) {
+  console.error("Error: provide only one manifest file.");
+  process.exit(2);
+}
+
+try {
+  const input = JSON.parse(readInput(paths[0]));
+  const result = validateManifest(input);
+
+  if (jsonMode) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    console.log(`${result.valid ? "✓" : "✗"} ${result.count ?? 0} movie(s) checked`);
+    for (const error of result.errors) console.log(`  ERROR   ${error}`);
+    for (const warning of result.warnings) console.log(`  WARNING ${warning}`);
+    if (result.valid && result.warnings.length === 0) console.log("  No issues found.");
+  }
+
+  process.exit(result.valid ? 0 : 1);
+} catch (error) {
+  console.error(`Error: ${error.message}`);
+  process.exit(2);
+}
