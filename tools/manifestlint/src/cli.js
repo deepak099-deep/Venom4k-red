@@ -8,8 +8,13 @@ function usage() {
 
 Usage:
   manifestlint <manifest.json>
+  manifestlint --strict <manifest.json>
   cat manifest.json | manifestlint
   manifestlint --json <manifest.json>
+
+Options:
+  --strict  treat warnings as validation errors
+  --json    print machine-readable JSON output
 
 Exit codes:
   0  valid manifest
@@ -31,7 +36,8 @@ if (args.includes("--help") || args.includes("-h")) {
 }
 
 const jsonMode = args.includes("--json");
-const paths = args.filter((arg) => arg !== "--json");
+const strictMode = args.includes("--strict");
+const paths = args.filter((arg) => arg !== "--json" && arg !== "--strict");
 
 if (paths.length > 1) {
   console.error("Error: provide only one manifest file.");
@@ -40,7 +46,7 @@ if (paths.length > 1) {
 
 try {
   const input = JSON.parse(readInput(paths[0]));
-  const result = validateManifest(input);
+  const result = validateManifest(input, { strict: strictMode });
 
   if (jsonMode) {
     console.log(JSON.stringify(result, null, 2));
