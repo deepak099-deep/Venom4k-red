@@ -46,6 +46,10 @@ try {
     console.log(JSON.stringify(result, null, 2));
   } else {
     console.log(`${result.valid ? "✓" : "✗"} ${result.count ?? 0} movie(s) checked`);
+    const resolutions = Object.entries(result.summary?.resolutions ?? {}).map(([key, value]) => `${key}: ${value}`).join(", ");
+    const years = Object.entries(result.summary?.years ?? {}).sort(([a], [b]) => Number(a) - Number(b)).map(([key, value]) => `${key}: ${value}`).join(", ");
+    if (resolutions) console.log(`  RESOLUTION ${resolutions}`);
+    if (years) console.log(`  YEARS      ${years}`);
     for (const error of result.errors) console.log(`  ERROR   ${error}`);
     for (const warning of result.warnings) console.log(`  WARNING ${warning}`);
     if (result.valid && result.warnings.length === 0) console.log("  No issues found.");
