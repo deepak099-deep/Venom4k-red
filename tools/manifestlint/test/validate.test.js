@@ -49,7 +49,6 @@ test("reports optional metadata as warnings", () => {
   assert.ok(result.warnings.some((warning) => warning.includes("description")));
 });
 
-
 test("builds resolution and year summary statistics", () => {
   const result = validateManifest([
     { id: 1, title: "One", year: 2000, resolution: "1080p", streamUrl: "https://example.com/1.mp4" },
@@ -58,4 +57,14 @@ test("builds resolution and year summary statistics", () => {
   ]);
   assert.deepEqual(result.summary.resolutions, { "1080p": 2, "4K": 1 });
   assert.deepEqual(result.summary.years, { "2000": 2, "2024": 1 });
+});
+
+test("strict mode promotes warnings to errors", () => {
+  const result = validateManifest([
+    { id: 1, title: "Minimal", streamUrl: "https://example.com/movie.mp4" }
+  ], { strict: true });
+
+  assert.equal(result.valid, false);
+  assert.ok(result.warnings.some((warning) => warning.includes("description")));
+  assert.ok(result.errors.some((error) => error.includes("description")));
 });
