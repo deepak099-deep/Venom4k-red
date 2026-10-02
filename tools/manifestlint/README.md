@@ -12,6 +12,7 @@ ManifestLint is designed around the data shape used by Venom4K-style movie catal
 - Validates IDs, titles, stream URLs, resolutions, and years
 - Detects duplicate IDs
 - Reports optional metadata as warnings
+- Optional strict mode for CI validation
 - Human-readable or machine-readable JSON output
 - Non-zero exit codes for CI pipelines
 
@@ -33,6 +34,12 @@ Machine-readable output:
 
 ```bash
 node src/cli.js --json catalog.json
+```
+
+Strict validation, where warnings also fail validation:
+
+```bash
+node src/cli.js --strict catalog.json
 ```
 
 Example:
@@ -66,7 +73,7 @@ Optional fields are checked when present:
 - `year`: integer from 1888 to 3000
 - `posterUrl`: HTTP or HTTPS
 
-Missing descriptions and invalid optional poster URLs are reported as warnings.
+Missing descriptions and invalid optional poster URLs are reported as warnings. Use `--strict` when those warnings should fail a CI check.
 
 ## Test
 
