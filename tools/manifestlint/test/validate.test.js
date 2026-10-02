@@ -48,3 +48,14 @@ test("reports optional metadata as warnings", () => {
   assert.equal(result.valid, true);
   assert.ok(result.warnings.some((warning) => warning.includes("description")));
 });
+
+
+test("builds resolution and year summary statistics", () => {
+  const result = validateManifest([
+    { id: 1, title: "One", year: 2000, resolution: "1080p", streamUrl: "https://example.com/1.mp4" },
+    { id: 2, title: "Two", year: 2000, resolution: "1080p", streamUrl: "https://example.com/2.mp4" },
+    { id: 3, title: "Three", year: 2024, resolution: "4K", streamUrl: "https://example.com/3.mp4" }
+  ]);
+  assert.deepEqual(result.summary.resolutions, { "1080p": 2, "4K": 1 });
+  assert.deepEqual(result.summary.years, { "2000": 2, "2024": 1 });
+});
