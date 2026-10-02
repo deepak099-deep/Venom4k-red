@@ -1,0 +1,5 @@
+const HEX=/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
+export function normalizeHex(value){if(typeof value!=="string"||!HEX.test(value.trim()))throw new Error("Invalid hex color: "+value);const raw=value.trim().replace(/^#/,"").toLowerCase();return "#"+(raw.length===3?raw.split("").map(c=>c+c).join(""):raw);}
+export function relativeLuminance(hex){const n=normalizeHex(hex);const c=[0,2,4].map(i=>parseInt(n.slice(i+1,i+3),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+export function contrastRatio(a,b){const x=relativeLuminance(a),y=relativeLuminance(b),hi=Math.max(x,y),lo=Math.min(x,y);return (hi+.05)/(lo+.05);}
+export function inspectPair(foreground,background){const ratio=contrastRatio(foreground,background);return {foreground:normalizeHex(foreground),background:normalizeHex(background),ratio:Number(ratio.toFixed(2)),aaNormal:ratio>=4.5,aaLarge:ratio>=3,aaaNormal:ratio>=7,aaaLarge:ratio>=4.5};}

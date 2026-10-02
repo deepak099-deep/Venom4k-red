@@ -1,0 +1,1 @@
+{"name":"@venom4k/lueur","version":"1.0.0","private":true,"type":"module","bin":{"lueur":"src/cli.js"},"scripts":{"test":"node --test"},"engines":{"node":">=20"}}
