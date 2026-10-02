@@ -53,10 +53,15 @@ export function validateManifest(input) {
   else return { valid: false, errors: ["Manifest must be a JSON array or an object containing a movies array"], warnings: [] };
 
   const ids = new Set();
+  const summary = { resolutions: {}, years: {} };
   movies.forEach((movie, index) => {
     const result = validateMovie(movie, index);
     errors.push(...result.errors);
     warnings.push(...result.warnings);
+    if (movie && typeof movie === "object" && !Array.isArray(movie)) {
+      if (movie.resolution) summary.resolutions[movie.resolution] = (summary.resolutions[movie.resolution] ?? 0) + 1;
+      if (Number.isInteger(movie.year)) summary.years[String(movie.year)] = (summary.years[String(movie.year)] ?? 0) + 1;
+    }
     if (movie && movie.id !== undefined && movie.id !== null) {
       const id = String(movie.id);
       if (ids.has(id)) errors.push(`movies[${index}].id duplicates another movie: ${id}`);
@@ -64,5 +69,5 @@ export function validateManifest(input) {
     }
   });
 
-  return { valid: errors.length === 0, count: movies.length, errors, warnings };
+  return { valid: errors.length === 0, count: movies.length, errors, warnings, summary };
 }
