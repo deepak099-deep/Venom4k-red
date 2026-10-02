@@ -43,7 +43,7 @@ export function validateMovie(movie, index) {
   return { errors, warnings };
 }
 
-export function validateManifest(input) {
+export function validateManifest(input, options = {}) {
   const errors = [];
   const warnings = [];
   let movies;
@@ -68,6 +68,8 @@ export function validateManifest(input) {
       ids.add(id);
     }
   });
+
+  if (options.strict) errors.push(...warnings);
 
   return { valid: errors.length === 0, count: movies.length, errors, warnings, summary };
 }
