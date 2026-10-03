@@ -12,11 +12,13 @@ Usage:
   streamcheck <url> [url...]
   streamcheck --file urls.txt
   streamcheck --json <url> [url...]
+  streamcheck --csv <url> [url...]
   streamcheck --timeout 15000 <url>
 
 Options:
   --file <path>       Read one URL per line
   --json              Print machine-readable JSON
+  --csv               Print spreadsheet-friendly CSV
   --timeout <ms>      Request timeout (default: 8000)
   --help              Show this help
 
@@ -28,6 +30,7 @@ function parseArgs(args) {
   const urls = [];
   let file = null;
   let json = false;
+  let csv = false;
   let timeout = 8000;
 
   for (let i = 0; i < args.length; i += 1) {
@@ -36,6 +39,10 @@ function parseArgs(args) {
     if (arg === "--help" || arg === "-h") return { help: true };
     if (arg === "--json") {
       json = true;
+      continue;
+    }
+    if (arg === "--csv") {
+      csv = true;
       continue;
     }
     if (arg === "--file") {
@@ -54,7 +61,8 @@ function parseArgs(args) {
     urls.push(arg);
   }
 
-  return { urls, file, json, timeout };
+  if (json && csv) throw new Error("--json and --csv cannot be used together");
+  return { urls, file, json, csv, timeout };
 }
 
 async function loadUrls(file, urls) {
@@ -106,6 +114,26 @@ function printTable(results) {
   }
 }
 
+function csvCell(value) {
+  const text = String(value ?? "");
+  return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
+export function formatCsv(results) {
+  const headers = ["result", "status", "latency_ms", "content_type", "redirected", "url", "error"];
+  const rows = results.map((result) => [
+    result.ok ? "OK" : "FAIL",
+    result.status ?? "",
+    result.latencyMs ?? "",
+    result.contentType ?? "",
+    result.redirected ? "yes" : "no",
+    result.url,
+    result.error ?? ""
+  ]);
+
+  return [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
+}
+
 async function main() {
   try {
     const parsed = parseArgs(process.argv.slice(2));
@@ -127,6 +155,8 @@ async function main() {
 
     if (parsed.json) {
       console.log(JSON.stringify(results, null, 2));
+    } else if (parsed.csv) {
+      console.log(formatCsv(results));
     } else {
       printTable(results);
     }
