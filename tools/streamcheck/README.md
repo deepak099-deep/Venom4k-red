@@ -28,11 +28,19 @@ Read URLs from a file:
 node src/cli.js --file urls.txt
 ```
 
-Get machine-readable output:
+Get machine-readable JSON output:
 
 ```bash
 node src/cli.js --json https://example.com/video.mp4
 ```
+
+Export results as spreadsheet-friendly CSV:
+
+```bash
+node src/cli.js --csv https://example.com/video.mp4 https://example.com/trailer.mp4
+```
+
+CSV includes result, HTTP status, latency, content type, redirect state, URL, and any error message, making it convenient for audits or importing into spreadsheet tools.
 
 Increase the timeout:
 
